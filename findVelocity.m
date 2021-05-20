@@ -1,8 +1,8 @@
-function vel = findVelocity(K, rollingAvg, bodypart)
+function vel = findVelocity(K, rollingAvg, b, maxVelocity)
     filt = ones(1,rollingAvg)./ rollingAvg;
 
-    body_x = strcat(bodypart, '_x');
-    body_y = strcat(bodypart, '_y');
+    body_x = strcat(b, '_x');
+    body_y = strcat(b, '_y');
 
     x = cell2mat({K(:).(body_x)})';
     x = conv(x,filt);
@@ -16,7 +16,9 @@ function vel = findVelocity(K, rollingAvg, bodypart)
     vel = zeros(1,length(pos));
     for i = 2:length(pos)
         a = (pos(i,1)-pos(i-1,1))^2 + (pos(i,2)-pos(i-1,2))^2;
-        vel(i) = a;
+        if(a < maxVelocity)
+            vel(i) = a;
+        end
     end
 
     vel = conv(vel,filt)';

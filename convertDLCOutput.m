@@ -11,6 +11,7 @@ for file = 3:length(path)
         M(index).day = str2double(extractBetween(mouseDesc, 'Day', 'Begin'));
         M(index).begin = str2double(extractBetween(mouseDesc, 'Begin', 'DV'));
         M(index).DV = str2double(extractAfter(mouseDesc, 'DV'));
+        M(index).desc = mouseDesc;
 
         M(index).DLC = convert2mat(strcat(path(file).folder, '\',path(file).name), videoFs, M(index).DV);
     end
@@ -19,17 +20,19 @@ end
 sortedM = table2struct(sortrows(struct2table(M), {'mouse', 'day', 'begin', 'DV'}));
 
 for m = 1:length(sortedM)
-    nose_vel = findVelocity(sortedM(m).DLC, 5, 'nose');
+    nose_vel = findVelocity(sortedM(m).DLC, 5, 'nose', 30);
+    nose2tail = findDistanceBetween(sortedM(m).DLC, 'nose', 'baseOfTail');
+    noseMidbodyTailAngle = findAngle(sortedM(m).DLC, 'nose', 'midbody', 'baseOfTail');
     
     figure(1);
+    t = (1:length(nose_vel)).*Ts;
+    
     subplot(3,1,1)
-    t = (1:length(vel)*Ts);
-    plot(vel); xlabel('Time (s)'); ylabel('Velocity (pixels/frame)')
+    plot(t, nose_vel); xlabel('Time (s)'); ylabel('Velocity (pixels/frame)'); title(sortedM(m).desc);
 
     subplot(3,1,2)
-    plot(conf); xlabel('Time (s)'); ylabel('Confidence %')
+    plot(t, nose2tail); xlabel('Time (s)'); ylabel('Distance (pixels)'); title(sortedM(m).desc);
 
     subplot(3,1,3)
-    confVel = (vel).*conf;
-    plot(confVel); xlabel('Time (s)'); ylabel('Velocity (pixels/frame)')
+    plot(t, noseMidbodyTailAngle); xlabel('Time (s)'); ylabel('Angle (rad)'); title(sortedM(m).desc);
  end
