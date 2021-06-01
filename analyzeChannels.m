@@ -14,5 +14,4 @@ for m = 23:length(mouse)
         end
     end
     name = strcat('./analyzedClips/', mouse(m).day(d).name,'.mat');
-    save(name, 'D', '-v7.3');
 end
