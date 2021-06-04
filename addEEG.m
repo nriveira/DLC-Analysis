@@ -1,7 +1,7 @@
-p = "C:\Users\nrive\Research\AnkG\kinematicInformation\";
+p = "C:\Users\nrive\Research\AnkG\kinematicInformation\convertedDLC\";
 
-% [, "Mouse-17", , "Mouse-20"]
-for mice = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mouse-12", "Mouse-16", "Mouse-18", "Mouse-20", "Mouse-22"]
+for mice = ["Mouse-19"] %"Mouse-3", "Mouse-4", "Mouse-12", "Mouse-20", "Mouse-22"]
+%for mice = ["Mouse-8", "Mouse-9", "Mouse-10", "Mouse-18", "Mouse-20"]
     path = strcat(p, mice, '.mat');
 
     load(path)
@@ -43,11 +43,11 @@ for mice = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mouse-12", 
         beginEEG = dayEEG.begin(strcmp({dayEEG.begin.name}, strcat('Begin', num2str(combinedK(i).begin))));
 
         combinedK(i).EEG = beginEEG.EEG;
-        t = timestamps1(timestamps1.Mouse==combinedK(i).mouse, :);
+        t = timestamps(timestamps.Mouse==combinedK(i).mouse, :);
         t = t(t.Day==combinedK(i).day, :);
         t = t(t.Begin==combinedK(i).begin, :);
         combinedK(i).eeg_startTimestamp = t.EEG_Datetime;
     end
-
-    save(strcat(p, mice, 'combined.mat'), 'combinedK')
+    K = combinedK;
+    save(strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\combinedEEG\", mice, '.mat'), 'K')
 end

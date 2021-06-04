@@ -14,12 +14,9 @@ function K = convert2mat(path,videoFs, dv, baseTime)
     headers{1,1} = 'timestamp';
 
     for i = 1:length(data)     
-        for j = 1:length(data(1,:))
-            time = baseTime;
-            
-            % Do something different for the timestamp, otherwise add it to the struct.
+        for j = 1:length(data(1,:))            
             if(j == 1)
-                K(i).(headers{1,j}) = time + seconds((data(i,j)*Ts)+ dv*120);
+                K(i).(headers{1,j}) = baseTime + seconds((data(i,j)*Ts)+ (dv*2*60));
             else
                 K(i).(headers{1,j}) = data(i,j);
             end
