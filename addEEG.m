@@ -1,7 +1,12 @@
+% load("C:\Users\nrive\Research\AnkG\kinematicInformation\convertedDLC\Mouse-20 (1).mat")
+% K1 = K;
+% load("C:\Users\nrive\Research\AnkG\kinematicInformation\convertedDLC\Mouse-20.mat")
+% K4 = K;
+% K = [K4; K1]
+
 p = "C:\Users\nrive\Research\AnkG\kinematicInformation\convertedDLC\";
 
-for mice = ["Mouse-19"] %"Mouse-3", "Mouse-4", "Mouse-12", "Mouse-20", "Mouse-22"]
-%for mice = ["Mouse-8", "Mouse-9", "Mouse-10", "Mouse-18", "Mouse-20"]
+for mice = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mouse-12", "Mouse-18", "Mouse-19" "Mouse-20", "Mouse-22"]
     path = strcat(p, mice, '.mat');
 
     load(path)
@@ -10,12 +15,13 @@ for mice = ["Mouse-19"] %"Mouse-3", "Mouse-4", "Mouse-12", "Mouse-20", "Mouse-22
     index = 0;
     combinedK = [];
 
-    for i = 1:length(K)    
+    for i = 1:length(K)
         if(K(i).day ~= currentDay || K(i).begin ~= currentBegin)
             index = index+1; 
             combinedK(index).mouse = K(i).mouse;
             combinedK(index).day = K(i).day;
             combinedK(index).begin = K(i).begin;
+            combinedK(index).pixel_val = K(i).pixel_val;
 
             combinedK(index).vid_timestamp = K(i).kinematics.timestamp;
             combinedK(index).nose_vel = K(i).kinematics.nose_vel;
@@ -48,6 +54,6 @@ for mice = ["Mouse-19"] %"Mouse-3", "Mouse-4", "Mouse-12", "Mouse-20", "Mouse-22
         t = t(t.Begin==combinedK(i).begin, :);
         combinedK(i).eeg_startTimestamp = t.EEG_Datetime;
     end
-    K = combinedK;
-    save(strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\combinedEEG\", mice, '.mat'), 'K')
+
+    save(strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\combinedEEG\", mice, '.mat'), 'combinedK')
 end

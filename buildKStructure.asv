@@ -7,7 +7,7 @@ for currentFile = ["Mouse-9", "Mouse-10", "Mouse-12", "Mouse-18", "Mouse-19" "Mo
         movingFor = 1;
         fps = 30;
         
-        if((combinedK(kCount).mouse==18) && ((combinedK(kCount).day==1) | (combinedK(kCount).day==2)))
+        if((combinedK.mouse==18) && ((combinedK.day==1) || (combinedK.day==2)))
             eegFs = 250;
         else
             eegFs = 200;
