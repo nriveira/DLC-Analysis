@@ -1,47 +1,71 @@
+binnedInstances = [];
+includeWakeRest = 0;
+limits = 3;
+
 for m = 1:length(mouseInfo)
     group = mouseInfo(m).group;
     mouseName = mouseInfo(m).mouseName;
-    
-    bin(1).limits = [0 5];
-    bin(2).limits = [5 10];
-    bin(3).limits = [10 25];
-    bin(1).instances = [];
-    bin(2).instances = [];
-    bin(3).instances = [];
-    
+    awakeRest = [];
+    velocity = [];
 
     for i = 1:length(mouseName)
-        load(strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\kStructure\", mouseName(i)))
-        
-        for j = 1:length(bin)
+        if(mouseName(i) ~= 'Mouse-19')
+            load(strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\awakeRest\", mouseName(i)))
+            
             for k = 1:length(K)
-                if(~isempty(K(k).runTimes))
-                    b = K(k).runTimes([K(k).runTimes.avgVelocity] <= bin(j).limits(2));
-                    bin(j).instances = [bin(j).instances b([b.avgVelocity] > bin(j).limits(1))];
+                runTimes = K(k).runTimes;
+                awakeRestTimes = K(k).wakeRest;
+                
+                awakeRest = [awakeRest awakeRestTimes];
+                for j = 1:length(limits)
+                    if(~isempty(runTimes))
+                        if(i==1)
+                            velocityBin = runTimes([runTimes.avgVelocity] <= limits(j));
+                            velocity{j,i} = velocityBin;
+                            runTimes = runTimes([runTimes.avgVelocity] > limits(j));
+                        else
+                            velocity{j,1} = [velocity{j,1} velocityBin];
+                        end
+                    end
+                end
+                if(i==1)
+                    velocity{j+1,i} = runTimes;
+                else
+                    velocity{j+1,1} = [velocity{j+1,1} runTimes];
                 end
             end
         end
     end
     
-    binnedInstances(m).bins = bin;
+    runSpeedBin.awakeRest = awakeRest;
+    runSpeedBin.velocity = velocity;
+
+    binnedInstances(m).group = group;
+    binnedInstances(m).bins = runSpeedBin;
 end
 
+bootfun = @(x) mean(x);
 
-for i = 1:length(binnedInstances)
+for i = 1:length(mouseInfo)
     a = binnedInstances(i).bins;
-    bootfun = @(x) mean(x);
-    eegWavelet = [];
+    temp = [];
+    awCI = bootci(2000, bootfun, [a.awakeRest.waveletPower]');
     
-    for j = 1:length(a)
-        for k = 1:length(a(j).instances)
-            x = a(j).instances(k).waveletPower;
-            if(~isnan(x(1)))
-                eegWavelet = [eegWavelet x];
-            end
+    for j = 1:length(a.velocity)
+        velocityBin = a.velocity{j,1};
+        awakeRestBin = a.awakeRest;
+        
+        if(~isempty(awakeRestBin) && j==1 && includeWakeRest) 
+            data = [velocityBin.waveletPower awakeRestBin.waveletPower]';
+        else
+            data = [velocityBin.waveletPower]';
         end
-       
-        [ci, bootstat] = bootci(1000, bootfun, eegWavelet');
-        temp(j) = {ci'};
+               
+        data = data(~isnan(data(:,1)),:);
+        ci = bootci(2000, bootfun, data);
+        temp{1,j} = ci';
     end
     binnedInstances(i).ci = temp;
+    binnedInstances(i).awCI = awCI;
 end
+

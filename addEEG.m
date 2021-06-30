@@ -1,12 +1,6 @@
-% load("C:\Users\nrive\Research\AnkG\kinematicInformation\convertedDLC\Mouse-20 (1).mat")
-% K1 = K;
-% load("C:\Users\nrive\Research\AnkG\kinematicInformation\convertedDLC\Mouse-20.mat")
-% K4 = K;
-% K = [K4; K1]
-
 p = "C:\Users\nrive\Research\AnkG\kinematicInformation\convertedDLC\";
 
-for mice = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mouse-12", "Mouse-18", "Mouse-19" "Mouse-20", "Mouse-22"]
+for mice = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mouse-12", "Mouse-16", "Mouse-18", "Mouse-19" "Mouse-20", "Mouse-22"]
     path = strcat(p, mice, '.mat');
 
     load(path)
