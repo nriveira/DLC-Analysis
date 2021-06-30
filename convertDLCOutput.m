@@ -1,10 +1,10 @@
-for mouseName = ["Mouse-3", "Mouse-4", "Mouse-12", "Mouse-20", "Mouse-22"]
-    p = strcat("C:\Users\nrive\Research\AnkG\DLC_Vids\iteration1\fourCageVidsTACC\", mouseName);
-    timestamps.pixel_val(74) = 0.0714375;
+% for mouseName = ["Mouse-3", "Mouse-4", "Mouse-12", "Mouse-20", "Mouse-22"]
+%     p = strcat("C:\Users\nrive\Research\AnkG\DLC_Vids\iteration1\fourCageVidsTACC\", mouseName);
+%     timestamps.pixel_val(74) = 0.0714375;
 
-% for mouseName = ["Mouse-8", "Mouse-9", "Mouse-10", "Mouse-18", "Mouse-19", "Mouse-20"]
-%     p = strcat("C:\Users\nrive\Research\AnkG\DLC_Vids\iteration1\oneCageVidsTACC\", mouseName);
-%     timestamps.pixel_val(74) = 0.051097656;
+for mouseName = ["Mouse-10", "Mouse-16"] %"Mouse-18", "Mouse-19", "Mouse-20"]"Mouse-8", "Mouse-9", 
+    p = strcat("C:\Users\nrive\Research\AnkG\DLC_Vids\iteration1\oneCageVidsTACC\", mouseName);
+    timestamps.pixel_val(74) = 0.051097656;
     path = dir(p);
     videoFs = 30;
 
@@ -15,7 +15,8 @@ for mouseName = ["Mouse-3", "Mouse-4", "Mouse-12", "Mouse-20", "Mouse-22"]
 
     for file = 3:length(path)
         if(endsWith(path(file).name, '.csv'))
-            mouseDesc = extractBefore(path(file).name, 'DLC_resnet');
+            mouseDesc = string(extractBetween(path(file).name, 'oneCageVids', 'DLC_resnet'));
+            %mouseDesc = string(extractBefore(path(file).name, 'DLC_resnet'));
             mouseStr = str2double(extractBetween(mouseDesc, 'Mouse-', 'Day'));
             dayStr = str2double(extractBetween(mouseDesc, 'Day', 'Begin'));
             beginStr = str2double(extractBetween(mouseDesc, 'Begin', 'DV'));
@@ -34,11 +35,11 @@ for mouseName = ["Mouse-3", "Mouse-4", "Mouse-12", "Mouse-20", "Mouse-22"]
                 nose2tail = findDistanceBetween(DLC, 'nose', 'baseOfTail');
                 noseMidbodyTailAngle = findAngle(DLC, 'nose', 'midbody', 'baseOfTail');
 
-%                 Time(index).mouse = mouseStr;
-%                 Time(index).day = dayStr;
-%                 Time(index).begin = beginStr;
-%                 Time(index).DV = DVStr;
-%                 Time(index).timestamp = {DLC.timestamp}';
+                Time(index).mouse = mouseStr;
+                Time(index).day = dayStr;
+                Time(index).begin = beginStr;
+                Time(index).DV = DVStr;
+                Time(index).timestamp = {DLC.timestamp}';
 
                 for i = 1:length(DLC) 
                     frame.timestamp(i) = DLC(i).timestamp;
