@@ -11,7 +11,7 @@ for rocidx = 1:length(ROC_data.mouse)
                         groundTruth = ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).truevalues.';
                         for classidx = 1:length(ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).analysis_data)
                             for timeidx = 1:length(ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).analysis_data(classidx).data)
-                                
+                                pixel_info
                                 classifiedData = ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).analysis_data(classidx).data(timeidx).classified';
                                 if length(classifiedData) >= length(groundTruth)
                                     classifiedData = classifiedData(1:length(groundTruth));
