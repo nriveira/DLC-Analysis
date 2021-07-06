@@ -46,14 +46,13 @@ for m = 1:length(mouseInfo)
         plot(x, mid, colors(m))
         h = patch([x fliplr(x)], [top fliplr(bot)], colors(m));
         set(h,'facealpha',.5)
-        title(strcat("Spectra for ", group, "awake rest"))
-        ylim([0, 0.12])
+        title(strcat("Spectra for ", group))
+        ylim([0, 0.55])
         xlabel('Frequency (Hz)')
         ylabel('Power')
     end
 end    
 
-desc = [" <3 cm/s", "3+ cm/s"];
 for i = 1:2
     for m = 1:length(mouseInfo)
         nexttile
@@ -67,7 +66,7 @@ for i = 1:2
             plot(x, mid, colors(m))
             h = patch([x fliplr(x)], [top fliplr(bot)], colors(m));
             set(h,'facealpha',.5)
-            title(strcat("Spectra for ", group, desc(i)))
+            title(strcat("Spectra for ", group))
             ylim([0, 0.55])
             xlabel('Frequency (Hz)')
             ylabel('Power')
@@ -75,3 +74,7 @@ for i = 1:2
     end
 end
 hold off;
+title("Spectra for awake non-moving")
+xlabel('Running Speed (cm/s)')
+ylabel('Power')
+legend(["","WT","","Heterozygous","","Homozygous"],'Location','best')

@@ -5,7 +5,7 @@ addpath('C:\Users\nrive\Research\DLC-Analysis\roc_code')
 behaviorEval = 'walk';
 classDirRoot = 'C:\Users\nrive\Research\AnkG\DLC_Vids\DLC_Vids\';
 fps = 30;
-for mouseidx = 1:length(Mouse)
+for mouseidx = 1:2%length(Mouse)
     mouseName = Mouse(mouseidx).name;
     for dayidx = 1:length(Mouse(mouseidx).Day)
         dayName = Mouse(mouseidx).Day(dayidx).name;
@@ -30,6 +30,9 @@ for mouseidx = 1:length(Mouse)
                     pixelValues = pixelValues([pixelValues.Day]==dayNum,:);
                     pixelValues = pixelValues([pixelValues.Begin]==beginNum,:);
                     pixelValues = pixelValues.pixel_val;
+                    if(isempty(pixelValues))
+                        pixelValues = .0511;
+                    end
 %%%%%%%%%%%%%%%%%%%Performing ROC Analysis%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                     % Loading data
                     motionData = [];
@@ -43,12 +46,13 @@ for mouseidx = 1:length(Mouse)
                     % Running likelihood processing
                     motionData = table2array(motionData);
                     [motionData,perc_rect] = adp_filt(motionData); %B-SOiD function
+                    motionData = motionData.*pixelValues;
                     
                     tic
-                    for timeThreshold = 1:50
+                    for timeThreshold = 1:20
                         for motionThreshold = 1:100
                             [~,~,~,~, non_sleep_frames] = ...
-                                DLC_awake_sleep_classify(dlcfiles,motionThreshold,timeThreshold*5,fps, motionData, pixelValues);
+                                DLC_awake_sleep_classify(dlcfiles,(motionThreshold),timeThreshold,fps, motionData);
                             ROC_data.mouse(mouseidx).day(dayidx).begin(beginidx).analysis_data(timeThreshold).data(motionThreshold).classified = non_sleep_frames;
                             ROC_data.mouse(mouseidx).day(dayidx).begin(beginidx).analysis_data(timeThreshold).data(motionThreshold).percentRectified = perc_rect;
                             ROC_data.mouse(mouseidx).day(dayidx).begin(beginidx).analysis_data(timeThreshold).data(motionThreshold).motion_threshold = motionThreshold;

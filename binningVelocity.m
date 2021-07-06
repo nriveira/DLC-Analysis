@@ -9,63 +9,51 @@ for m = 1:length(mouseInfo)
     velocity = [];
 
     for i = 1:length(mouseName)
-        if(mouseName(i) ~= 'Mouse-19')
-            load(strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\awakeRest\", mouseName(i)))
-            
-            for k = 1:length(K)
-                runTimes = K(k).runTimes;
-                awakeRestTimes = K(k).wakeRest;
-                
-                awakeRest = [awakeRest awakeRestTimes];
-                for j = 1:length(limits)
-                    if(~isempty(runTimes))
-                        if(i==1)
-                            velocityBin = runTimes([runTimes.avgVelocity] <= limits(j));
-                            velocity{j,i} = velocityBin;
-                            runTimes = runTimes([runTimes.avgVelocity] > limits(j));
-                        else
-                            velocity{j,1} = [velocity{j,1} velocityBin];
-                        end
-                    end
-                end
-                if(i==1)
-                    velocity{j+1,i} = runTimes;
-                else
-                    velocity{j+1,1} = [velocity{j+1,1} runTimes];
+        load(strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\awakeRest\", mouseName(i)))
+
+        for k = 1:length(K)
+            runTimes = K(k).runTimes;
+            awakeRestTimes = K(k).wakeRest;
+
+            awakeRest{i,1} = awakeRestTimes;
+            for j = 1:length(limits)
+                if(~isempty(runTimes))
+                    velocityBin = runTimes([runTimes.avgVelocity] <= limits(j));
+                    velocity{j,i} = velocityBin;
+                    runTimes = runTimes([runTimes.avgVelocity] > limits(j));
                 end
             end
+            velocity{j+1,i} = runTimes;
         end
     end
     
-    runSpeedBin.awakeRest = awakeRest;
-    runSpeedBin.velocity = velocity;
-
     binnedInstances(m).group = group;
-    binnedInstances(m).bins = runSpeedBin;
+    binnedInstances(m).awakeRest = awakeRest;
+    binnedInstances(m).velocity = velocity;
 end
-
 bootfun = @(x) mean(x);
-
+%% Analyze Awake Rest
 for i = 1:length(mouseInfo)
-    a = binnedInstances(i).bins;
-    temp = [];
-    awCI = bootci(2000, bootfun, [a.awakeRest.waveletPower]');
+    vel = binnedInstances(i).velocity;
+    awakeRest = binnedInstances(i).awakeRest;
+    velCI = [];
+    awCI = [];
     
-    for j = 1:length(a.velocity)
-        velocityBin = a.velocity{j,1};
-        awakeRestBin = a.awakeRest;
-        
-        if(~isempty(awakeRestBin) && j==1 && includeWakeRest) 
-            data = [velocityBin.waveletPower awakeRestBin.waveletPower]';
-        else
-            data = [velocityBin.waveletPower]';
-        end
-               
-        data = data(~isnan(data(:,1)),:);
-        ci = bootci(2000, bootfun, data);
-        temp{1,j} = ci';
+    for aw = 1:length(awakeRest)
+        wp = [awakeRest{aw,1}.waveletPower]';
+        awCI{aw,1} = bootci(2000, bootfun, wp);
     end
-    binnedInstances(i).ci = temp;
+
+    for v = 1:size(vel,1)
+        for bins = 1:size(vel,2)
+            velocityBin = vel{v,bins};
+            wp = [velocityBin.waveletPower]';
+            wp(any(isnan(wp),2),:) = [];
+            velCI{v,bins} = bootci(2000, bootfun, wp);
+        end
+    end
+    
+    binnedInstances(i).velCI = velCI;
     binnedInstances(i).awCI = awCI;
 end
 

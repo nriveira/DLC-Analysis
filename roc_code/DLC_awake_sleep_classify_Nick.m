@@ -55,16 +55,16 @@ hold on
 selectedT = 20;
 for t = 1:20
     if(t ~= selectedT)
-        plot(ROCplotData(75:end,t,1),ROCplotData(75:end,t,2), 'c');
-        scatter(ROCplotData(75:end,t,1),ROCplotData(75:end,t,2),'.', 'c');
+        plot(ROCplotData(:,t,1),ROCplotData(:,t,2), 'c');
+        scatter(ROCplotData(:,t,1),ROCplotData(:,t,2),'.', 'c');
         xlabel('False Positive Fraction (1-Specificity)');
         ylabel('True Positive Fraction (Sensitivity)');
-        AUC = string(trapz(ROCplotData(:,1),ROCplotData(:,2)));
-        titleName = strcat('Classifier ROC Curve, t =', string(selectedT));
+        AUC = string(trapz(ROCplotData(:,t,1),ROCplotData(:,t,2)));
+        titleName = strcat('Classifier ROC Curve, AUC=', AUC);
         title(titleName);
     end
 end
-plot(ROCplotData(75:end,selectedT,1),ROCplotData(75:end,selectedT,2), 'k');
-scatter(ROCplotData(75:end,selectedT,1),ROCplotData(75:end,selectedT,2),'.', 'k');
+plot(ROCplotData(:,t,1),ROCplotData(:,selectedT,2), 'k');
+scatter(ROCplotData(:,selectedT,1),ROCplotData(:,selectedT,2),'.', 'k');
 
 hold off;
