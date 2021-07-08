@@ -1,0 +1,13 @@
+t = 1:1000000;
+fs = 200;
+f1 = 10;
+f2 = 60;
+
+s1 = 10*sin(2*pi*t*(f1/fs));
+s2 = 100*sin(2*pi*t*(fq/fs));
+
+sig = s1+s2;
+
+normalizeEEG(sig);
+
+get_wavelet_power(normalize
