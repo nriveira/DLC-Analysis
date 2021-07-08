@@ -1,13 +1,23 @@
-t = 1:1000000;
 fs = 200;
+ts = 1/fs;
+t = ts:ts:10;
 f1 = 10;
 f2 = 60;
 
-s1 = 10*sin(2*pi*t*(f1/fs));
-s2 = 100*sin(2*pi*t*(fq/fs));
+s1 = sin(2*pi*f1*t);
+s2 = 50*sin(2*pi*f2*t);
+sig = s1'+s2';
 
-sig = s1+s2;
+normSig = normalizeEEG(sig, fs);
 
-normalizeEEG(sig);
+result1 = get_wavelet_power(normSig, fs, [1 50], 20);
+spec = mean(result1,2);
 
-get_wavelet_power(normalize
+result1 = get_wavelet_power(normSig, fs, [1 50], 20);
+spec = mean(result1,2);
+
+result1 = get_wavelet_power(normSig, fs, [1 50], 20);
+spec = mean(result1,2);
+
+figure(1); hold on;
+plot(1:50, spec)
