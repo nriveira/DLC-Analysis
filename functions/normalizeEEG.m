@@ -1,4 +1,4 @@
-function [ normSignal, sig, modelfit, mu] = normalizeEEG( rSignal , fs)
+function [ normSignal, sig, modelfit, mu] = normalizeEEG(rSignal , fs)
 % normalizeEEG normalizes an EEG signal to a variance of 1 and a mean of 0.
 % It does this by using the standard deviation and mean of the signal as
 % calculated by a guassian model fit after the signal has been cleaned of
@@ -25,9 +25,8 @@ function [ normSignal, sig, modelfit, mu] = normalizeEEG( rSignal , fs)
 % JP 2017
 
 % apply filter to signal
-filtSignal = rSignal;
 % filtSignal = highPassChebyshev1Filt_EEG(filtSignal, fs); % high pass filter above 2Hz
-
+filtSignal = lowpass(rSignal, 50, fs);
 
 % normalize each of the first 5 channels of the EEG to the set the variance in each channel to 1
 tempSignal = rSignal;

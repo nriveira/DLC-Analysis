@@ -52,8 +52,8 @@ for timeidx = 1:length(motionThresholdROC)
 end
 ROCcurve = figure();
 hold on
-selectedT = 20;
-for t = 1:20
+selectedT = 5;
+for t = 1:5
     if(t ~= selectedT)
         plot(ROCplotData(:,t,1),ROCplotData(:,t,2), 'c');
         scatter(ROCplotData(:,t,1),ROCplotData(:,t,2),'.', 'c');

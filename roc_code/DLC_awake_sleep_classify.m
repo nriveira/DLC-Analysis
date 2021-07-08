@@ -52,10 +52,10 @@ centroids(:,2) = motionDataStruc.xy.mdbdy(:,2);
 %     deltas(frameidx,2) = abs(centroids((frameidx+1),2)-centroids(frameidx,2));
 % end
 
-delta_temp = conv(centroids(:,1), [1 -1]);
-deltas(:,1) = abs(delta_temp(2:end));
-delta_temp = conv(centroids(:,2), [1 -1]);
-deltas(:,2) = abs(delta_temp(2:end));
+delta_temp = conv(centroids(:,1), [-1 1]);
+deltas(:,1) = abs(delta_temp(1:end-1));
+delta_temp = conv(centroids(:,2), [-1 1]);
+deltas(:,2) = abs(delta_temp(1:end-1));
 
 deltapercentiles(:,1) = prctile(deltas(:,1),1:100,'all');
 deltapercentiles(:,2) = prctile(deltas(:,2),1:100,'all');
@@ -64,8 +64,11 @@ deltapercentiles(:,2) = prctile(deltas(:,2),1:100,'all');
 checkAS = ones(fps*timeThreshold,1).';
 
 %% Classifying awake or asleep
-deltaValThreshold(1,1) = deltapercentiles(motionThreshold,1);
-deltaValThreshold(1,2) = deltapercentiles(motionThreshold,2);
+% deltaValThreshold(1,1) = deltapercentiles(motionThreshold,1);
+% deltaValThreshold(1,2) = deltapercentiles(motionThreshold,2);
+deltaValThreshold(1,1) = motionThreshold;
+deltaValThreshold(1,2) = motionThreshold;
+
 awake_sleep_score_xy(:,1) = deltas(:,1) <= deltaValThreshold(1,1);
 awake_sleep_score_xy(:,2) = deltas(:,2) <= deltaValThreshold(1,2);
 awake_sleep_score = awake_sleep_score_xy(:,1) | awake_sleep_score_xy(:,2);

@@ -27,14 +27,16 @@
 %     xlabel('Running Speed (cm/s)')
 %     ylabel('Frequency (Hz)')
 % end
-
-binsStr = ["<3 cm/s", "3+ cm/s"];
+%% Plotting Individual
+binsStr = [" <3 cm/s", " 3+ cm/s"];
 colors = ["r","g","b"];
+ind = 1;
 
 figure(1); clf;
 tiledlayout(3,3)
 
 for m = 1:length(mouseInfo)
+    meanMid = [];
     nexttile
     hold on;
     for n = 1:length(mouseInfo(m).mouseName)
@@ -43,6 +45,13 @@ for m = 1:length(mouseInfo)
         top = current(1,:);
         bot = current(2,:);
         mid = mean(current);
+        if(n==1)
+            variance(:,m) = bot-mid;
+        else
+            variance(:,m) = variance(:,m)+(bot-mid)';
+        end
+        meanMid(:,n) = mid;
+        
         plot(x, mid, colors(m))
         h = patch([x fliplr(x)], [top fliplr(bot)], colors(m));
         set(h,'facealpha',.5)
@@ -51,10 +60,15 @@ for m = 1:length(mouseInfo)
         xlabel('Frequency (Hz)')
         ylabel('Power')
     end
+    combinedMid(:,ind) = mean(meanMid,2);
+    combinedVar(:,ind) = variance(:,m);
+    ind=ind+1;
 end    
 
 desc = [" <3 cm/s", "3+ cm/s"];
-for i = 1:2
+for i = 1:length(desc)
+    variance = [];
+    meanMid = [];
     for m = 1:length(mouseInfo)
         nexttile
         hold on;
@@ -64,14 +78,44 @@ for i = 1:2
             top = current(1,:);
             bot = current(2,:);
             mid = mean(current);
+            variance(:,n) = (bot-mid)';
+            meanMid(:,n) = mid;
+
             plot(x, mid, colors(m))
             h = patch([x fliplr(x)], [top fliplr(bot)], colors(m));
             set(h,'facealpha',.5)
             title(strcat("Spectra for ", group, desc(i)))
-            ylim([0, 0.55])
+            ylim([0, 0.45])
             xlabel('Frequency (Hz)')
             ylabel('Power')
         end
+        combinedMid(:,ind) = mean(meanMid,2);
+        combinedVar(:,ind) = sum(variance,2);
+        ind=ind+1;
     end
 end
 hold off;
+
+%% Plotting Average
+figure(2);
+tiledlayout(3,1);
+desc = [" awake rest", " <3 cm/s", "3+ cm/s"];
+for i = 1:3
+    nexttile
+    for j = 1:3
+        hold on;
+        mid = combinedMid(:,(i-1)*3+j);
+        top = mid+combinedVar(:,i);
+        bot = mid-combinedVar(:,i);
+        x = [1:50]';
+        plot(x, mid, colors(j))
+        plot(x, top, colors(j))
+        plot(x, bot, colors(j))
+        %h = patch([x fliplr(x)], [bot fliplr(top)], colors(j));
+        set(h,'facealpha',.5)
+        title(strcat("Spectra for ", group), desc(j))
+        %ylim([0, 0.45])
+        xlabel('Frequency (Hz)')
+        ylabel('Power')
+    end
+end

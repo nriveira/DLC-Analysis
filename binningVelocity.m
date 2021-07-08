@@ -49,7 +49,7 @@ for i = 1:length(mouseInfo)
             velocityBin = vel{v,bins};
             wp = [velocityBin.waveletPower]';
             wp(any(isnan(wp),2),:) = [];
-            velCI{v,bins} = bootci(2000, bootfun, wp);
+            velCI{v,bins} = bootci(1000, bootfun, wp);
         end
     end
     
