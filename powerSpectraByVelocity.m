@@ -1,4 +1,15 @@
 clf; figure(1); hold on;
+mouseInfo(1).group = "WT";
+mouseInfo(1).mouseName = ["Mouse-3","Mouse-4","Mouse-5"];
+mouseInfo(1).color = 'r';
+
+mouseInfo(2).group = "Heterozygous";
+mouseInfo(2).mouseName = ["Mouse-8","Mouse-9","Mouse-10","Mouse-12"];
+mouseInfo(2).color = 'g';
+
+mouseInfo(3).group = "Homozygous";
+mouseInfo(3).mouseName = ["Mouse-16","Mouse-18","Mouse-20","Mouse-22","Mouse-23"];
+mouseInfo(3).color = 'b';
 
 for m = 1:length(mouseInfo)
     group = mouseInfo(m).group;

@@ -1,8 +1,7 @@
 p = "C:\Users\nrive\Research\AnkG\kinematicInformation\convertedDLC\";
 
-for mice = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mouse-12", "Mouse-16", "Mouse-18", "Mouse-19" "Mouse-20", "Mouse-22"]
-    path = strcat(p, mice, '.mat');
-
+for mice = "Mouse-17" %["Mouse-3","Mouse-4","Mouse-5","Mouse-8","Mouse-9","Mouse-10","Mouse-12","Mouse-16","Mouse-18","Mouse-19","Mouse-20","Mouse-21","Mouse-22","Mouse-23"]
+    path = strcat(p, mice, ".mat");
     load(path)
     currentDay = 0;
     currentBegin = 0;
@@ -16,6 +15,7 @@ for mice = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mouse-12", 
             combinedK(index).day = K(i).day;
             combinedK(index).begin = K(i).begin;
             combinedK(index).pixel_val = K(i).pixel_val;
+            combinedK(index).fs = K(i).fs;
 
             combinedK(index).vid_timestamp = K(i).kinematics.timestamp;
             combinedK(index).nose_vel = K(i).kinematics.nose_vel;
@@ -42,12 +42,19 @@ for mice = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mouse-12", 
         dayEEG = mouseEEG.day(strcmp({mouseEEG.day.name}, strcat('Day', num2str(combinedK(i).day))));
         beginEEG = dayEEG.begin(strcmp({dayEEG.begin.name}, strcat('Begin', num2str(combinedK(i).begin))));
 
-        combinedK(i).EEG = beginEEG.EEG;
+        combinedK(i).EEG = beginEEG.EEG(:,1);
         t = timestamps(timestamps.Mouse==combinedK(i).mouse, :);
         t = t(t.Day==combinedK(i).day, :);
         t = t(t.Begin==combinedK(i).begin, :);
         combinedK(i).eeg_startTimestamp = t.EEG_Datetime;
+        combinedK(i).vid_timestamp = combinedK(i).vid_timestamp';
+        combinedK(i).nose_vel = combinedK(i).nose_vel'; 
+        combinedK(i).midbody_vel = combinedK(i).midbody_vel';
+        combinedK(i).baseOfTail_vel = combinedK(i).baseOfTail_vel';
+        combinedK(i).nose2tail = combinedK(i).nose2tail';
+        combinedK(i).noseMidbodyTailAngle = combinedK(i).noseMidbodyTailAngle';
     end
 
     save(strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\combinedEEG\", mice, '.mat'), 'combinedK')
+    fprintf("%s finished saving. \n", mice)
 end

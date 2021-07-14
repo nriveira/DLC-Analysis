@@ -1,4 +1,4 @@
-for currentFile = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mouse-12", "Mouse-16", "Mouse-18", "Mouse-19" "Mouse-20", "Mouse-22"] 
+for currentFile = "Mouse-17" %["Mouse-3","Mouse-4","Mouse-5","Mouse-8","Mouse-9","Mouse-10","Mouse-12","Mouse-16","Mouse-18","Mouse-19","Mouse-20","Mouse-21","Mouse-22","Mouse-23"]
     path = strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\combinedEEG\", currentFile, ".mat");
     load(path);
 
@@ -7,13 +7,9 @@ for currentFile = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mous
         movingFor = 4;
         fps = 30;
         avg = fps;
-        
-        if((combinedK(kCount).mouse==18) && ((combinedK(kCount).day==1) || (combinedK(kCount).day==2)))
-            eegFs = 250;
-        else
-            eegFs = 200;
-        end
-            
+        eegFs = combinedK(kCount).fs;
+           
+        % One second clip buffer
         clipBuffer = eegFs;
         threshold = 0.05;
         pixel_val = combinedK(kCount).pixel_val;
@@ -22,21 +18,13 @@ for currentFile = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mous
         index = 0;
         lastTrue = 0;
         normEEG = [];
-        
-        i = 1;
-        while(i <= size(combinedK(kCount).EEG,2))
-            if(sum(combinedK(kCount).EEG(:,i))==0)
-                combinedK(kCount).EEG(:,i) = [];
-            else
-                [normEEG(i, :), ~, ~, ~] = normalizeEEG(combinedK(kCount).EEG(:,i), eegFs);
-                i=i+1;
-            end
-        end
+
+        [normEEG, ~, ~, ~] = normalizeEEG(combinedK(kCount).EEG, eegFs);
  
         eeg_start = combinedK(kCount).eeg_startTimestamp;
         avgFilter = (pixel_val/avg)*ones(1,avg);
         scaledSignal = conv(avgFilter, combinedK(kCount).(bodypart_vel));
-        scaledSignal = scaledSignal(ceil(avg/2):end-floor(avg/2));
+        scaledSignal = scaledSignal(ceil(length(avgFilter)/2):end-floor(length(avgFilter)/2));
 
         for i = clipBuffer+1:length(scaledSignal)
             if(scaledSignal(i) > threshold)
@@ -58,25 +46,21 @@ for currentFile = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mous
             
             startEEG = floor((runTimes(i).startTime-eeg_start)/seconds(1/eegFs));
             stopEEG = floor((runTimes(i).stopTime-eeg_start)/seconds(1/eegFs));
-            startEEGIndex = max(startEEG-clipBuffer, 1);
-            stopEEGIndex = min(stopEEG+clipBuffer, size(normEEG, 2));
-            
+            startEEGIndex = startEEG-clipBuffer;
+            stopEEGIndex = stopEEG+clipBuffer;
             % Set to midbody
-            runTimes(i).avgVelocity = mean(combinedK(kCount).midbody_vel(1,runTimes(i).vidstart:runTimes(i).vidstop));
-            runTimes(i).EEGclip = normEEG(:, startEEGIndex:stopEEGIndex)';
+            if(startEEGIndex > 1 && stopEEGIndex < length(normEEG))
+                runTimes(i).avgVelocity = mean(combinedK(kCount).midbody_vel(runTimes(i).vidstart:runTimes(i).vidstop));
+                runTimes(i).EEGclip = normEEG(startEEGIndex:stopEEGIndex);
+            else
+                runTimes(i).avgVelocity = 0;
+                runTimes(i).EEGclip = [];
+            end
         end
 
         if(~isempty(runTimes))
             runTimes = runTimes([runTimes.totalSeconds] > movingFor);
-        end
-        
-        i=1;
-        while(i < length(runTimes))
-            if(isempty(runTimes(i).EEGclip))
-                runTimes(i) = [];
-            else
-                i=i+1;
-            end
+            runTimes = runTimes([runTimes.avgVelocity] > 0);
         end
         
         for i = 1:length(runTimes)
@@ -84,7 +68,7 @@ for currentFile = ["Mouse-3", "Mouse-4", "Mouse-8", "Mouse-9", "Mouse-10", "Mous
         end
         
         combinedK(kCount).runTimes = runTimes;
-    end    
+    end
     
     K = combinedK;
 

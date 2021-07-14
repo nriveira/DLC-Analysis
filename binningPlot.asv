@@ -54,10 +54,8 @@ end
 %% 3+ cm/s Plots
 for i = 1:length(confidence)
     nexttile; hold on;
-    legendEntry = [];   
+    
     group = confidence(i).name;
-    opacityInc = 1/length(confidence(i).group);
-    opacity = opacityInc:opacityInc:1;
     for j = 1:length(confidence(i).group)
         for k = 1:length(confidence(i).group(j).movement)        
             x = 1:50;
@@ -65,7 +63,7 @@ for i = 1:length(confidence)
             bot = data(1,:);
             top = data(2,:);
             patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(i).color, 'FaceAlpha', opacity(j));
-            legendEntry = [legendEntry strcat(confidence(i).group(j).name, " n=", num2str(size(confidence(i).group(j).movement.moving(2).wavelet,2)))];
+            legendEntry = [legendEntry strcat(confidence(i).group(j).name, " n=", num2str(size(confidence(i).group(j).movement(k).movement.moving(2).wavelet,2)))];
         end
     end
     

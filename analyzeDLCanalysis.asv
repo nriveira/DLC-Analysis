@@ -7,7 +7,7 @@ mouseInfo(2).mouseName = ["Mouse-8","Mouse-9","Mouse-10","Mouse-12"];
 mouseInfo(2).color = 'g';
 
 mouseInfo(3).group = "Homozygous";
-mouseInfo(3).mouseName = ["Mouse-16","Mouse-17","Mouse-18","Mouse-20","Mouse-22","Mouse-23"];
+mouseInfo(3).mouseName = ["Mouse-16","Mouse-17","Mouse-18","Mouse-22","Mouse-23"];
 
 for m = 1:length(mouseInfo)
     group = mouseInfo(m).group;

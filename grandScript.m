@@ -1,0 +1,37 @@
+%% Conversion from DLC to analyzable data structure. %%
+
+%% timestamps.mat 
+% contains all the beginning timestamps for both the EEG
+% signals and the video start times. It also includes the pixel conversion
+% value to normalize the distance in each video as well as the sampling
+% frequency of all videos
+load 'timestamps.mat'
+
+%% convertDLCOutput.m 
+% analyzes the output of DLC for all mice in the analysis by
+% pulling from the CSV files of all the mice and calculating all the
+% kinematic information from the position values.
+convertDLCOutput
+
+%% addEEG.m
+% Combine all of the CSV files together and add the EEG signals for each
+% begin.
+addEEG
+
+%% Using the combined EEG and movement data,
+% partition the different clips into moving and non moving to make the
+% bootstapping process easier.
+buildKStructure
+
+%% Add awakeRest.m
+% After compiling all awakeRest instances using the provided
+% classifiedMouse files, add the wakeRest bouts to the data structure. From
+% the way this is implemented, the output of buildKStructure will need to
+% be manually moved to the folder that is accessed in this function. 
+wakeRestCompile
+addWakeRest
+
+%% Analysis code using data structure formed above. 
+load 'mouseInfo.mat'
+analyzeDLCanalysis
+plotDLCanalysis

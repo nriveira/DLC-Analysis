@@ -1,7 +1,7 @@
 kpath = "C:\Users\nrive\Research\AnkG\kinematicInformation\awakeRest\Mouse-";
 buffer = 200;
 
-for w = 1:length(wakeRest)
+for w = 22:length(wakeRest)
     tic
     load(strcat(kpath, num2str(wakeRest(w).mouse),'.mat'))
     
@@ -18,23 +18,9 @@ for w = 1:length(wakeRest)
     kBegin = find([K.begin]== wakeRest(w).begin);
     mouseDay = intersect(kMouse, kDay);
     ind = intersect(kBegin, mouseDay);
-    
-    if((wakeRest(w).mouse==18) && ((wakeRest(w).day==1) || (wakeRest(w).day==2)))
-        eegFs = 250;
-    else
-        eegFs = 200;
-    end
+    eegFs = K(ind).fs;
 
-    i = 1;
-    normEEG = [];
-    while(i <= size(K(ind).EEG,2))
-        if(sum(K(ind).EEG(:,i))==0)
-            K(ind).EEG(:,i) = [];
-        else
-            [normEEG(i, :), ~, ~, ~] = normalizeEEG(K(ind).EEG(:,i), eegFs);
-            i=i+1;
-        end
-    end
+    [normEEG, ~, ~, ~] = normalizeEEG(K(ind).EEG, eegFs);
 
     for c = 1:length(currentWakeRest.awakeNotMovingBout)
         currentWakeRest.awakeNotMovingBout(c).startTime = currentK.vid_timestamp(currentWakeRest.awakeNotMovingBout(c).start);
@@ -44,7 +30,7 @@ for w = 1:length(wakeRest)
         eegStop = floor((currentWakeRest.awakeNotMovingBout(c).stopTime - currentK.eeg_startTimestamp)/seconds(1/eegFs));
 
         if((eegStart-buffer > 1) && (eegStop+buffer < length(currentK.EEG)))
-            currentWakeRest.awakeNotMovingBout(c).EEGclip = normEEG(:,eegStart-buffer:eegStop+buffer);
+            currentWakeRest.awakeNotMovingBout(c).EEGclip = normEEG(eegStart-buffer:eegStop+buffer);
             currentWakeRest.awakeNotMovingBout(c).waveletPower = mean(mean(get_wavelet_power(currentWakeRest.awakeNotMovingBout(c).EEGclip, eegFs, [1 50], 6),2),3);
         end
     end
