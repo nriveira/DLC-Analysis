@@ -107,6 +107,7 @@ title("Combined spectra for awake rest")
 xlabel("Frequency (Hz)")
 ylabel("Power")
 legend("WT","HET","HOM")
+axis square;
 
 nexttile;
 hold on;
@@ -137,6 +138,7 @@ title("Combined spectra for <3 cm/s of movement")
 xlabel("Frequency (Hz)")
 ylabel("Power")
 legend("WT","HET","HOM")
+axis square;
 
 nexttile;
 hold on;
@@ -167,3 +169,5 @@ title("Combined spectra for 3+ cm/s of movement")
 xlabel("Frequency (Hz)")
 ylabel("Power")
 legend("WT","HET","HOM")
+
+axis square;
