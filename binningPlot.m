@@ -77,7 +77,7 @@ for i = 1:length(confidence)
 end
 
 %% Plotting Average awake rest
-figure(2); clf; tiledlayout(3,1)
+figure(2); clf; tiledlayout(1,3)
 nexttile;
 hold on;
 for i = 1:length(confidence)
@@ -100,8 +100,7 @@ for i = 1:length(confidence)
     ci95 = 2*(SE.^(1/2));
     bot = spectraMean'-ci95';
     top = spectraMean'+ci95';
-    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(i).color)
-    alpha(0.4);
+    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(1).colorNum)
 end
 title("Combined spectra for awake rest")
 xlabel("Frequency (Hz)")
@@ -131,8 +130,7 @@ for i = 1:length(confidence)
     ci95 = 2*(SE.^(1/2));
     bot = spectraMean'-ci95';
     top = spectraMean'+ci95';
-    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(i).color)
-    alpha(0.4);
+    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(2).colorNum)
 end
 title("Combined spectra for <3 cm/s of movement")
 xlabel("Frequency (Hz)")
@@ -162,8 +160,7 @@ for i = 1:length(confidence)
     ci95 = 2*(SE.^(1/2));
     bot = spectraMean'-ci95';
     top = spectraMean'+ci95';
-    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(i).color)
-    alpha(0.4);
+    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(3).colorNum)
 end
 title("Combined spectra for 3+ cm/s of movement")
 xlabel("Frequency (Hz)")

@@ -1,36 +1,41 @@
 %% Evaluating ROC Metrics
-load rocdata.mat
+ROCplotData = [];
+motionThresholdROC = [];
 
 datact = 1;
 for rocidx = 1:length(ROC_data.mouse)
     if ~isempty(ROC_data.mouse(rocidx).name)
         for dayidx = 1:length(ROC_data.mouse(rocidx).day)
-            if isfield(ROC_data.mouse(rocidx).day(dayidx).begin,'analysis_data')
-                for beginidx = 1:length(ROC_data.mouse(rocidx).day(dayidx).begin)
-                    if ~isempty(ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).truevalues)
-                        groundTruth = ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).truevalues.';
-                        for classidx = 1:length(ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).analysis_data)
-                            for timeidx = 1:length(ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).analysis_data(classidx).data)
-                                
-                                classifiedData = ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).analysis_data(classidx).data(timeidx).classified';
-                                if length(classifiedData) >= length(groundTruth)
-                                    classifiedData = classifiedData(1:length(groundTruth));
-                                else
-                                    groundTruth = groundTruth(1:length(classifiedData));
+            if isfield(ROC_data.mouse(rocidx),'analysis_data')
+                for timeidx = 1:length(ROC_data.mouse(rocidx))
+                    for beginidx = 1:length(ROC_data.mouse(rocidx).day(dayidx).begin)
+                    
+                        if ~isempty(ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).truevalues)
+                            groundTruth = ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).truevalues.';
+                            for classidx = 1:length(ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).analysis_data)
+                                for timeidx = 1:length(ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).analysis_data(classidx).data) 
+                                    classifiedData = ROC_data.mouse(rocidx).day(dayidx).begin(beginidx).analysis_data(classidx).data(timeidx).classified';
+                                    if length(classifiedData) >= length(groundTruth)
+                                        classifiedData = classifiedData(1:length(groundTruth));
+                                    else
+                                        groundTruth = groundTruth(1:length(classifiedData));
+                                    end
+
+                                    falsePositives = sum(classifiedData > groundTruth);
+                                    falseNegatives = sum(classifiedData < groundTruth);
+                                    trueData = classifiedData + groundTruth;
+                                    truePositives = sum(trueData(:) == 2);
+                                    trueNegatives = sum(trueData(:) == 0);
+                                    motionThresholdROC(timeidx).thresholds(classidx).FP(datact) = falsePositives;
+                                    motionThresholdROC(timeidx).thresholds(classidx).FN(datact) = falseNegatives;
+                                    motionThresholdROC(timeidx).thresholds(classidx).TP(datact) = truePositives;
+                                    motionThresholdROC(timeidx).thresholds(classidx).TN(datact) = trueNegatives;
+                                    datact = datact+1;
+
                                 end
-                                falsePositives = sum(classifiedData > groundTruth);
-                                falseNegatives = sum(classifiedData < groundTruth);
-                                trueData = classifiedData + groundTruth;
-                                truePositives = sum(trueData(:) == 2);
-                                trueNegatives = sum(trueData(:) == 0);
-                                motionThresholdROC(timeidx).thresholds(classidx).FP(datact) = falsePositives;
-                                motionThresholdROC(timeidx).thresholds(classidx).FN(datact) = falseNegatives;
-                                motionThresholdROC(timeidx).thresholds(classidx).TP(datact) = truePositives;
-                                motionThresholdROC(timeidx).thresholds(classidx).TN(datact) = trueNegatives;
-                                datact = datact+1;
-                                
                             end
                         end
+                    
                     end
                 end
             end

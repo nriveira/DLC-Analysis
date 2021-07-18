@@ -4,15 +4,15 @@ bootfun = @(x) mean(x);
 
 mouseInfo(1).group = "WT";
 mouseInfo(1).mouseName = ["Mouse-3","Mouse-4","Mouse-5"];
-mouseInfo(1).color = 'r';
+mouseInfo(1).color = 'b';
 
 mouseInfo(2).group = "Heterozygous";
 mouseInfo(2).mouseName = ["Mouse-8","Mouse-9","Mouse-10","Mouse-12"];
-mouseInfo(2).color = 'g';
+mouseInfo(2).color = 'o';
 
 mouseInfo(3).group = "Homozygous";
-mouseInfo(3).mouseName = ["Mouse-16","Mouse-17","Mouse-18","Mouse-20","Mouse-22","Mouse-23"];
-mouseInfo(3).color = 'b';
+mouseInfo(3).mouseName = ["Mouse-16","Mouse-17","Mouse-18","Mouse-22","Mouse-23"];
+mouseInfo(3).color = 'g';
 
 for m = 1:length(mouseInfo)
     group = mouseInfo(m).group;
@@ -27,9 +27,10 @@ for m = 1:length(mouseInfo)
 
         for k = 1:length(K)
             runTimes = [runTimes K(k).runTimes];
+            awakeRest = [awakeRest K(k).wakeRest.waveletPower];
         end
         
-        movement.awakeRest = [K(k).wakeRest.waveletPower];
+        movement.awakeRest = awakeRest;
 
         for j = 1:length(limits)
             if(~isempty(runTimes))
