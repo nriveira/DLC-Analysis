@@ -13,8 +13,10 @@ for m = 3:length(path)
             beginNum =  str2double(extractAfter(beginDir(b).name, 'Begin'));
             fileDir = dir(strcat(beginDir(b).folder,'/',beginDir(b).name));
             
-            for f = 3:length(fileDir)
-                load(strcat(fileDir(f).folder,'/',fileDir(f).name))
+            file = fileDir(contains({fileDir.name},["Moving", "moving"]));
+            
+            for f = 1:length(file)
+                load(strcat(file(f).folder,'/',file(f).name))
             end
             
             fprintf('Mouse%d Day%d Begin%d\n', mouseNum, dayNum, beginNum);

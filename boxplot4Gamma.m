@@ -1,4 +1,4 @@
-path = "D:\awakeRest\";
+path = "C:\Users\nrive\Research\AnkG\kinematicInformation\awakeRest\";
 thresholdVel = 3;
 mouseInfo(1).group = "WT";
 mouseInfo(1).mouseName = ["Mouse-3","Mouse-4","Mouse-5"];
@@ -9,7 +9,7 @@ mouseInfo(2).mouseName = ["Mouse-8","Mouse-9","Mouse-10","Mouse-12"];
 mouseInfo(2).color = 'g';
 
 mouseInfo(3).group = "Homozygous";
-mouseInfo(3).mouseName = ["Mouse-16","Mouse-17","Mouse-18","Mouse-20","Mouse-22","Mouse-23"];
+mouseInfo(3).mouseName = ["Mouse-16","Mouse-17","Mouse-18","Mouse-19","Mouse-20","Mouse-22","Mouse-23"];
 mouseInfo(3).color = 'b';
 
 for genotype = 1:length(mouseInfo)
@@ -61,4 +61,22 @@ homAG = boxes.Homozygous.awakeGamma;
 homSMG = boxes.Homozygous.slowMovingGamma;
 homFMG = boxes.Homozygous.fastMovingGamma;
 
-boxplot(wtAG)
+figure(3); tiledlayout(1,3)
+
+nexttile
+agBoxAlign = [ones(size(wtAG)); 2*ones(size(hetAG)); 3*ones(size(homAG))];
+agBox = [wtAG; hetAG; homAG];
+boxplot(agBox, agBoxAlign)
+set(gca,'XTickLabel',{'WT','HET','HOM'})
+
+nexttile
+smgBoxAlign = [ones(size(wtSMG)); 2*ones(size(hetSMG)); 3*ones(size(homSMG))];
+smgBox = [wtSMG; hetSMG; homSMG];
+boxplot(smgBox, smgBoxAlign)
+set(gca,'XTickLabel',{'WT','HET','HOM'})
+
+nexttile
+fmgBoxAlign = [ones(size(wtFMG)); 2*ones(size(hetFMG)); 3*ones(size(homFMG))];
+fmgBox = [wtFMG; hetFMG; homFMG];
+boxplot(fmgBox, fmgBoxAlign)
+set(gca,'XTickLabel',{'WT','HET','HOM'})

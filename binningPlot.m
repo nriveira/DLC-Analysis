@@ -100,7 +100,8 @@ for i = 1:length(confidence)
     ci95 = 2*(SE.^(1/2));
     bot = spectraMean'-ci95';
     top = spectraMean'+ci95';
-    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(1).colorNum)
+    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(i).color)
+    alpha(0.5)
 end
 title("Combined spectra for awake rest")
 xlabel("Frequency (Hz)")
@@ -130,7 +131,8 @@ for i = 1:length(confidence)
     ci95 = 2*(SE.^(1/2));
     bot = spectraMean'-ci95';
     top = spectraMean'+ci95';
-    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(2).colorNum)
+    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(i).color)
+    alpha(0.5)
 end
 title("Combined spectra for <3 cm/s of movement")
 xlabel("Frequency (Hz)")
@@ -160,7 +162,8 @@ for i = 1:length(confidence)
     ci95 = 2*(SE.^(1/2));
     bot = spectraMean'-ci95';
     top = spectraMean'+ci95';
-    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(3).colorNum)
+    patch([x fliplr(x)], [top fliplr(bot)], mouseInfo(i).color)
+    alpha(0.5)
 end
 title("Combined spectra for 3+ cm/s of movement")
 xlabel("Frequency (Hz)")

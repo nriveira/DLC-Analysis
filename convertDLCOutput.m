@@ -1,4 +1,4 @@
-for mouseName = "Mouse-17" %["Mouse-3","Mouse-4","Mouse-5","Mouse-8","Mouse-9","Mouse-10","Mouse-12","Mouse-16","Mouse-18","Mouse-19","Mouse-20","Mouse-21","Mouse-22","Mouse-23"]
+for mouseName = ["Mouse-17", "Mouse-19"] %["Mouse-3","Mouse-4","Mouse-5","Mouse-8","Mouse-9","Mouse-10","Mouse-12","Mouse-16","Mouse-18","Mouse-19","Mouse-20","Mouse-21","Mouse-22","Mouse-23"]
     p = strcat("C:\Users\nrive\Research\AnkG\DLC_Vids\iteration2\", mouseName);
     path = dir(p);
     videoFs = 30;

@@ -1,7 +1,7 @@
 kpath = "C:\Users\nrive\Research\AnkG\kinematicInformation\awakeRest\Mouse-";
 buffer = 200;
 
-for w = 22:length(wakeRest)
+for w = 77%22:length(wakeRest)
     tic
     load(strcat(kpath, num2str(wakeRest(w).mouse),'.mat'))
     

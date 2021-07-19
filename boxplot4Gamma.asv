@@ -9,7 +9,7 @@ mouseInfo(2).mouseName = ["Mouse-8","Mouse-9","Mouse-10","Mouse-12"];
 mouseInfo(2).color = 'g';
 
 mouseInfo(3).group = "Homozygous";
-mouseInfo(3).mouseName = ["Mouse-16","Mouse-17","Mouse-18","Mouse-20","Mouse-22","Mouse-23"];
+mouseInfo(3).mouseName = ["Mouse-16","Mouse-17","Mouse-18","Mouse-19","Mouse-20","Mouse-22","Mouse-23"];
 mouseInfo(3).color = 'b';
 
 for genotype = 1:length(mouseInfo)
@@ -53,10 +53,23 @@ wtAG = boxes.WT.awakeGamma;
 wtSMG = boxes.WT.slowMovingGamma;
 wtFMG = boxes.WT.fastMovingGamma;
 
-hetAG = boxes.WT.awakeGamma;
-hetSMG = boxes.WT.slowMovingGamma;
-hetFMG = boxes.WT.fastMovingGamma;
+hetAG = boxes.Heterozygous.awakeGamma;
+hetSMG = boxes.Heterozygous.slowMovingGamma;
+hetFMG = boxes.Heterozygous.fastMovingGamma;
 
-homAG = boxes.WT.awakeGamma;
-homSMG = boxes.WT.slowMovingGamma;
-homFMG = boxes.WT.fastMovingGamma;
+homAG = boxes.Homozygous.awakeGamma;
+homSMG = boxes.Homozygous.slowMovingGamma;
+homFMG = boxes.Homozygous.fastMovingGamma;
+
+figure(3); tiledlayout(1,3)
+
+nexttile;
+agBoxAlign = [ones(size(wtAG)); 2*ones(size(hetAG)); ones(size(homAG))];
+agBox = [wtAG; hetAG; homAG];
+
+
+smgBoxAlign = [ones(size(wtSMG)); ones(size(hetSMG)); ones(size(homSMG))];
+smgBox = [wtSMG; hetSMG; homSMG];
+
+fmgBoxAlign = [ones(size(wtFMG)); ones(size(hetFMG)); ones(size(homFMG))];
+fmgBox = [wtFMG; hetFMG; homFMG];

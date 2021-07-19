@@ -21,6 +21,7 @@ for m = 1:length(mouseInfo)
 
     for i = 1:length(mouseName)
         load(strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\awakeRest\", mouseName(i)))
+        fprintf("%s")
         awakeRest = [];
         movement = [];
         runTimes = [];
@@ -46,7 +47,7 @@ for m = 1:length(mouseInfo)
     end
 end
 
-%% Analyze Awake Rest and movement
+%% Analyze Awake Rest
 for g = 1:length(confidence)
     for m1 = 1:length(confidence(g).group)
         for m2 = 1:length(confidence(g).group(m1).movement)

@@ -1,4 +1,4 @@
-for currentFile = "Mouse-17" %["Mouse-3","Mouse-4","Mouse-5","Mouse-8","Mouse-9","Mouse-10","Mouse-12","Mouse-16","Mouse-18","Mouse-19","Mouse-20","Mouse-21","Mouse-22","Mouse-23"]
+for currentFile = ["Mouse-17", "Mouse-19"] %["Mouse-3","Mouse-4","Mouse-5","Mouse-8","Mouse-9","Mouse-10","Mouse-12","Mouse-16","Mouse-18","Mouse-19","Mouse-20","Mouse-21","Mouse-22","Mouse-23"]
     path = strcat("C:\Users\nrive\Research\AnkG\kinematicInformation\combinedEEG\", currentFile, ".mat");
     load(path);
 
